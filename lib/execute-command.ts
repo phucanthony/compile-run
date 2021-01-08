@@ -1,5 +1,5 @@
 import { Options, Result } from "./types";
-import { ChildProcess, spawn } from "child_process";
+import { ChildProcess, spawn, fork } from "child_process";
 import path from 'path';
 
 interface ResponseMessage {
@@ -10,23 +10,23 @@ interface ResponseMessage {
 
 /**
  * Execute a command taking spawn like arguments and returns a result promise
- * @param cmd 
- * @param args 
+ * @param cmd
+ * @param args
  * @param options
  */
 export function execute(cmd: string, args: string[], options?: Options): Promise<Result>;
 
 /**
  * Execute a command taking spawn like arguments and returns a result promise
- * @param cmd 
+ * @param cmd
  * @param options
  */
 export function execute(cmd: string, options?: Options): Promise<Result>;
 
 /**
  * Execute a command taking spawn like arguments and returns a result promise
- * @param cmd 
- * @param args 
+ * @param cmd
+ * @param args
  */
 export function execute(cmd: string, args?: string[]): Promise<Result>;
 
@@ -54,8 +54,8 @@ export function execute(cmd: string, ...args: any[]): Promise<Result> {
             stderrLimit = args[0] && args[0].stderrLimit || stderrLimit;
             stdoutLimit = args[0] && args[0].stdoutLimit || stdoutLimit;
         }
-        p = spawn('node', [path.join(__dirname, 'box')], {
-            stdio: ['inherit', 'inherit', 'inherit', 'ipc']
+        p = spawn('node', [`--max-old-space-size=${args[0].memoryLimit || 1024}`, path.join(__dirname, 'box')], {
+            stdio: ['inherit', 'inherit', 'inherit', 'ipc'],
         });
         p.send({
             cmd,
