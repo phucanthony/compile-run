@@ -1,9 +1,10 @@
 {
   "name": "@phucanthony/compile-run",
-  "version": "2.3.5",
+  "version": "2.3.6",
   "description": "You can execute programs in different languages using this package",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "private": false,
   "scripts": {
     "prepare": "npm run build",
     "prepublish": "yarn prepare && yarn version",
