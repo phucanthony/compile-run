@@ -1,5 +1,5 @@
 import { Options, Result } from "./types";
-import { ChildProcess, spawn, fork } from "child_process";
+import { ChildProcess, spawn } from "child_process";
 import path from 'path';
 
 interface ResponseMessage {
@@ -35,6 +35,7 @@ export function execute(cmd: string, ...args: any[]): Promise<Result> {
     let stdin = '';
     let stdoutLimit = 1000;
     let stderrLimit = 1000;
+    let memoryLimit = 1024;
     return new Promise((res, rej) => {
         let p: ChildProcess;
         let arr: string[] | undefined = undefined;
@@ -46,6 +47,7 @@ export function execute(cmd: string, ...args: any[]): Promise<Result> {
                 stdin = args[1] && args[1].stdin || stdin;
                 stderrLimit = args[1] && args[1].stderrLimit || stderrLimit;
                 stdoutLimit = args[1] && args[1].stdoutLimit || stdoutLimit;
+                memoryLimit = args[1] && args[1].memoryLimit || memoryLimit;
             }
         }
         else if (args[0] && typeof args[0] === 'object') {
@@ -53,8 +55,9 @@ export function execute(cmd: string, ...args: any[]): Promise<Result> {
             stdin = args[0] && args[0].stdin || stdin;
             stderrLimit = args[0] && args[0].stderrLimit || stderrLimit;
             stdoutLimit = args[0] && args[0].stdoutLimit || stdoutLimit;
+            memoryLimit = args[0] && args[0].memoryLimit || memoryLimit;
         }
-        p = spawn('node', [`--max-old-space-size=${args[0].memoryLimit || 1024}`, path.join(__dirname, 'box')], {
+        p = spawn('node', [`--max-old-space-size=${memoryLimit}`, path.join(__dirname, 'box')], {
             stdio: ['inherit', 'inherit', 'inherit', 'ipc'],
         });
         p.send({
