@@ -1,11 +1,12 @@
 {
-  "name": "compile-run",
-  "version": "2.3.4",
+  "name": "@phucanthony/compile-run",
+  "version": "2.3.5",
   "description": "You can execute programs in different languages using this package",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
     "prepare": "npm run build",
+    "prepublish": "yarn prepare && yarn version",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "npm run tsc --",
     "tsc": "tsc"
