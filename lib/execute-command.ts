@@ -77,5 +77,12 @@ export function execute(cmd: string, ...args: any[]): Promise<Result> {
             }
             p.kill();
         });
+
+        p.on('exit', function (code) {
+            if (code === 134) {
+                rej("Out of memory");
+            }
+            p.kill();
+        });
     });
 }
